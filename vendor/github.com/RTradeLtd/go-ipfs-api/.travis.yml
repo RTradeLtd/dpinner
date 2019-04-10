@@ -1,0 +1,34 @@
+sudo: required
+
+language: go
+
+go:
+  - 1.11.x
+
+matrix:
+  allow_failures:
+    - go: tip
+
+services:
+  - docker
+
+before_install:
+- make testenv
+
+install:
+  - make deps
+  - go get -t -v ./...
+
+script:
+  - go test -race -short -coverprofile=coverage.txt ./...
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
+
+notifications:
+  email: false
+
+cache:
+  directories:
+    - $GOPATH/src/gx

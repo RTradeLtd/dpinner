@@ -2,6 +2,8 @@ github.com/AndreasBriese/bbloom v0.0.0-20180913140656-343706a395b7/go.mod h1:bOv
 github.com/Kubuxu/go-os-helper v0.0.1/go.mod h1:N8B+I7vPCT80IcP58r50u4+gEEcsZETFUpAzWW2ep1Y=
 github.com/RTradeLtd/go-ipfs-api v2.0.9+incompatible h1:LBG4bj/5X2YLXrKbADnCxfj1CDtN9hLsd22A68O9m7U=
 github.com/RTradeLtd/go-ipfs-api v2.0.9+incompatible/go.mod h1:gNXXZcJz7PkDXtUhjrlf4pSgDVV7yhVKQvLWUO/5k9o=
+github.com/RTradeLtd/thc v0.0.0-20190320213636-f7aa35911920 h1:IJm4cody7RGcZ+a0/40Ko2QDKvIsVMFPq4W155iohRY=
+github.com/RTradeLtd/thc v0.0.0-20190320213636-f7aa35911920/go.mod h1:TQ98jM8TT+8KdNFabAG/DhIYe3nuHowpdadc8hk61co=
 github.com/aead/siphash v1.0.1/go.mod h1:Nywa3cDsYNNK3gaciGTWPwHt0wlpNV15vwmswBAUSII=
 github.com/btcsuite/btcd v0.0.0-20190213025234-306aecffea32 h1:qkOC5Gd33k54tobS36cXdAzJbeHaduLtnLQQwNoIi78=
 github.com/btcsuite/btcd v0.0.0-20190213025234-306aecffea32/go.mod h1:DrZx5ec/dmnfpw9KyYoQyYo7d0KEvTkk/5M/vbZjAr8=

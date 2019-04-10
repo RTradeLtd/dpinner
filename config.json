@@ -1,5 +1,12 @@
 {
-	"client_id": "",
-	"client_secret": "",
-	"token": ""
+	"discord": {
+		"client_id": "",
+		"client_secret": "",
+		"token": ""
+	},
+	"temporal": {
+		"warp_url": "",
+		"user": "",
+		"pass": ""
+	}
 }
