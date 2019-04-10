@@ -77,8 +77,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
+
 	// parse the message contents based off string fields
 	args := strings.Fields(m.Content)
+	if len(args) == 0 {
+		return
+	}
 	// ensure the first field is a valid invocation of dpinner
 	if args[0] != "!dpinner" {
 		return
@@ -120,11 +124,34 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		s.ChannelMessageSend(m.ChannelID, "successfully indexed hashe(s)")
 	}
+
+	if args[1] == "search" {
+		searchArgs := args[2:]
+		query := strings.Join(searchArgs, " ")
+		resp, err := tc.SearchLens(query)
+		if err != nil {
+			s.ChannelMessageSend(m.ChannelID, "failed to submit search query to lens")
+			return
+		}
+		var (
+			results []string
+			count   int
+		)
+		for _, v := range resp.Response.Results {
+			if count == 10 {
+				break
+			}
+			results = append(results, v.Doc.Hash)
+			count++
+		}
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("your search results are, %v\n", results))
+	}
 }
 
 func processUpload(s *discordgo.Session, attachments []*discordgo.MessageAttachment, channelID string) {
 	for _, v := range attachments {
-		resp, err := http.Get(v.ProxyURL)
+		fmt.Printf("fetching object %+v\n", v)
+		resp, err := http.Get(v.URL)
 		if err != nil {
 			s.ChannelMessageSend(channelID, "failed to process attachments")
 			return

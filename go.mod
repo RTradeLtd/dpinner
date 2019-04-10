@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/RTradeLtd/go-ipfs-api v2.0.9+incompatible
-	github.com/RTradeLtd/thc v0.0.0-20190320213636-f7aa35911920
+	github.com/RTradeLtd/thc v0.0.0-20190410082513-ee1ad64f8a25
 	github.com/bwmarrin/discordgo v0.19.0
 	github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
 	github.com/ipfs/go-ipfs-files v0.0.2 // indirect
