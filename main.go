@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
@@ -94,7 +95,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		return
 	}
-
 	// If the message is "pong" reply with "Ping!"
 	if args[1] == "pong" {
 		if _, err := s.ChannelMessageSend(m.ChannelID, "Ping!"); err != nil {
@@ -126,28 +126,50 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if args[1] == "search" {
-		searchArgs := args[2:]
-		query := strings.Join(searchArgs, " ")
-		resp, err := tc.SearchLens(query)
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, "failed to submit search query to lens")
-			return
-		}
-		var (
-			results []string
-			count   int
-		)
-		for _, v := range resp.Response.Results {
-			if count == 10 {
-				break
-			}
-			results = append(results, v.Doc.Hash)
-			count++
-		}
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("your search results are, %v\n", results))
+		processLensSearch(s, m.ChannelID, args)
 	}
 }
 
+func processLensSearch(s *discordgo.Session, channelID string, args []string) {
+	searchArgs := args[2:]
+	query := strings.Join(searchArgs, " ")
+	resp, err := tc.SearchLens(query)
+	if err != nil {
+		s.ChannelMessageSend(channelID, "failed to submit search query to lens")
+		return
+	}
+	var (
+		results []string
+		count   int
+	)
+	if len(resp.Response.Results) > 10 {
+		foundResults := make(map[string]bool)
+		for {
+			if count == 10 {
+				break
+			}
+			hash := resp.Response.Results[rand.Intn(len(resp.Response.Results))].Doc.Hash
+			if foundResults[hash] {
+				continue
+			}
+			results = append(results, hash)
+			foundResults[hash] = true
+			count++
+		}
+	} else {
+		for _, v := range resp.Response.Results {
+			results = append(results, v.Doc.Hash)
+		}
+	}
+	output := strings.Join(results, " ")
+	msg := &discordgo.MessageEmbed{
+		Author: &discordgo.MessageEmbedAuthor{
+			Name: "Lens Search Results",
+		},
+		Description: output,
+	}
+	s.ChannelMessageSendEmbed(channelID, msg)
+}
 func processUpload(s *discordgo.Session, attachments []*discordgo.MessageAttachment, channelID string) {
 	for _, v := range attachments {
 		fmt.Printf("fetching object %+v\n", v)
