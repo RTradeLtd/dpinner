@@ -114,8 +114,57 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 		s.ChannelMessageSend(m.ChannelID, "successfully processed pin request(s)")
 	}
-	if args[1] == "index" {
 
+	if args[1] == "help" {
+		msg := &discordgo.MessageEmbed{
+			Author: &discordgo.MessageEmbedAuthor{
+				Name: "dpinner help menu",
+			},
+			Description: `available commands are:
+
+			upload: upload an attachment to ipfs
+
+			pin: pin hash(es) with Temporal
+
+			index: index hash(es) with Lens
+
+			search: search Lens for ipfs hashes matching your query
+
+			`,
+			Footer: &discordgo.MessageEmbedFooter{
+				Text: "dpinner makes use of Lens, Temporal, and Warp. Try Temporal at https://temporal.cloud",
+			},
+			Fields: []*discordgo.MessageEmbedField{
+				{
+					Name: "upload",
+					Value: `
+					when uploading an attachment, use a comment of **!dpinner upload**
+					this will upload all attachments associated with the comment to ipfs
+					`,
+				},
+				{
+					Name: "pin",
+					Value: `
+					the command is **!dpinner upload** and takes a list of hashes
+					example: **!dpinner upload hash1 hash2 hash3**`,
+				},
+				{
+					Name: "index",
+					Value: `
+					the command is **!dpinner index** and takes a list of hashes
+					example: **!dpinner index hash1 hash2 hash3**`,
+				},
+				{
+					Name: "search",
+					Value: `
+					the command is **!dpinner search** and takes a search query
+					example: **!dpinner search blockchain**`,
+				},
+			},
+		}
+		s.ChannelMessageSendEmbed(m.ChannelID, msg)
+	}
+	if args[1] == "index" {
 		for i := 2; i < len(args)-1; i++ {
 			if _, err := tc.IndexHash(args[i], args[len(args)-1] == "reindex=true"); err != nil {
 				s.ChannelMessageSend(m.ChannelID, "failed to process lens index request(s)")
